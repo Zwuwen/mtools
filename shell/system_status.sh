@@ -1,4 +1,13 @@
 #!/bin/sh
+
+if [ $# -ne 1 ]
+then
+echo
+echo Usage: system_status.sh pid
+echo
+exit
+fi
+
 while true
 do
 	date
@@ -6,7 +15,7 @@ do
 	#top -bn1 | grep load | awk '{printf "CPU Load: %.2f\n", $(NF-2)}' 
 	top -n 1 | awk -F '[ %]+' 'NR==1 {printf "Mem(top):  used:%dMB free:%dMB (%.2f%%)\n",$(2)/1024,$(4)/1024,$2*100/($4+$2)}'
 	top -n 1 | awk -F '[ %]+' 'NR==2 {printf "CPU: %d%%\n",$(2)}'
-	cat /proc/31329/status| awk -F '[ %]+' 'NR==16 {printf "VmHWM:%dMB\n",$2/1024}'
+	cat /proc/${1}/status| awk -F '[ %]+' 'NR==16 {printf "VmHWM:%dMB\n",$2/1024}'
 	echo ===========================================================================
 	sleep 3
 
